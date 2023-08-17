@@ -6,6 +6,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @NoArgsConstructor
 //@Entity
@@ -14,7 +16,7 @@ import lombok.NoArgsConstructor;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ProdutoResponse {
 
-//    @Id
+    //    @Id
     @JsonProperty("id")
     private Long id;
 
@@ -96,8 +98,8 @@ public class ProdutoResponse {
     @JsonProperty("idFabricante")
     public String idFabricante;
 
-//    @JsonProperty("categoria")
-//    public CategoriaResponse categoria;
+    @JsonProperty("categoria")
+    public CategoriaResponse categoria;
 
     @JsonProperty("pesoLiq")
     public String pesoLiq;
@@ -156,5 +158,3 @@ public class ProdutoResponse {
     @JsonProperty("spedTipoItem")
     public String spedTipoItem;
 }
-
-
