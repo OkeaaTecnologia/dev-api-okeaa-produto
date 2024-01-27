@@ -6,6 +6,8 @@ import br.com.okeaa.apiokeaaproduto.exceptions.categoria.*;
 import br.com.okeaa.apiokeaaproduto.service.categoria.CategoriaService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -20,6 +22,8 @@ import javax.validation.Valid;
 @CrossOrigin(origins = "*")        // Liberar os dominios da API
 @Validated
 public class CategoriaController {
+
+    public static final Logger logger = LoggerFactory.getLogger(ProdutoController.class);
 
     @Autowired
     public  CategoriaService categoriaService;
@@ -38,7 +42,7 @@ public class CategoriaController {
                 throw new CategoriaListaException("Não foi possível localizar a lista de categorias");
             }
 
-            System.out.println("GET: " + request);
+            logger.info("GET: " + request);
 
             return ResponseEntity.ok(request);
 
@@ -60,7 +64,7 @@ public class CategoriaController {
                 throw new CategoriaIdCategoriaException("Contato com o número de CPF/CNPJ: " + idCategoria + " não encontrado.");
             }
 
-            System.out.println("GET ID: " + request);
+            logger.info("GET ID: " + request);
 
             return ResponseEntity.ok(request);
 
@@ -74,15 +78,11 @@ public class CategoriaController {
      */
     @PostMapping(path = "/cadastrarcategoria", consumes = MediaType.APPLICATION_XML_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Cadastrar uma categoria")
-    public ResponseEntity<JsonRequest> createCategory(@RequestBody @Valid String xmlCategoria) {
+    public ResponseEntity<String> createCategory(@RequestBody @Valid String xmlCategoria) {
         try {
-            JsonRequest request = categoriaService.createCategory(xmlCategoria);
+            String request = categoriaService.createCategory(xmlCategoria).getBody();
 
-            if (request.retorno.categorias == null && request.retorno.erros == null) {
-                throw new CategoriaCadastroException("Cadastro não efetuado, revise os campos e tente novamente!");
-            }
-
-            System.out.println("POST: " + request);
+            logger.info("POST: " + request);
 
             return ResponseEntity.ok(request);
 
@@ -96,14 +96,11 @@ public class CategoriaController {
      */
     @PutMapping(path = "/atualizarcategoria/{idCategoria}", consumes = MediaType.APPLICATION_XML_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     @ApiOperation(value = "Atualiza uma categoria")
-    public ResponseEntity<JsonRequest> updateCategory(@RequestBody String xmlCategoria, @PathVariable("idCategoria") String idCategoria) {
+    public ResponseEntity<String> updateCategory(@RequestBody String xmlCategoria, @PathVariable("idCategoria") String idCategoria) {
         try {
-            JsonRequest request = categoriaService.updateCategory(xmlCategoria, idCategoria);
+            String request = categoriaService.updateCategory(xmlCategoria, idCategoria).getBody();
 
-            if (request.retorno.categorias == null && request.retorno.erros == null) {
-                throw new CategoriaAtualizarException("Não foi possível atualizar a categoria pelo Id: " + idCategoria);
-            }
-            System.out.println("UPDATE: " + request);
+            logger.info("UPDATE: " + request);
 
             return ResponseEntity.ok(request);
 
